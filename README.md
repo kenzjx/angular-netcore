@@ -1,0 +1,1 @@
+netcore 6  + angular
