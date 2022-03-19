@@ -40,7 +40,7 @@ namespace Server.Controllers
         }
 
         [Route(nameof(Login))]
-        public async Task<ActionResult<string>> Login( LoginRequestModel model)
+        public async Task<ActionResult<object>> Login( LoginRequestModel model)
         {
 
             var user = await userManager.FindByNameAsync(model.UserName);
@@ -62,7 +62,8 @@ namespace Server.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString() )
+                    new Claim(ClaimTypes.NameIdentifier, user.Id ),
+                     new Claim(ClaimTypes.Name, user.UserName ),
                 }),
 
                 Expires = DateTime.Now.AddDays(7),
@@ -70,7 +71,9 @@ namespace Server.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescription);
             var encrytedToken = tokenHandler.WriteToken(token);
-            return encrytedToken;
+            return new {
+                Token = encrytedToken
+            };
         }
     }
 }

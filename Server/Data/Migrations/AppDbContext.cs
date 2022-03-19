@@ -10,7 +10,14 @@ namespace Server.Data.Migrations
         {
         }
 
-       
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Cat>(entity =>{
+                entity.HasOne(c=>c.User).WithMany(u=>u.Cats).HasForeignKey(c=>c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+            base.OnModelCreating(builder);
+        }
         
     }
 }
